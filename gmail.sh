@@ -7,20 +7,27 @@ PASS=${GPASS}
 TO=${GMAIL}
 SUBJECT='Subject'
 MESSAGE='Message'
+MESSAGE_FILE=''
+TEXT=false
+FILE=false
 
 # Help menu
 print_usage() {
-	printf "Usage:\n\t [-f] From\n\t [-u] Username\n\t [-p] Password\n\t [-t] To\n\t [-s] Subject\n\t [-m] Message\n\t [-h] Help\n"
+	printf "Usage:\n\t[-f] From: Your name or identifier\n\t[-u] Username: Override default username\n\t[-p] Password: Override default password\n\t[-t] To: Recipient of email\n\t[-s] Subject: Subject line of email\n\t[-m] Attach message from text input (mutually exclusive with[-o])\n\t[-o] Attach message from file input (mutually exclusive with[-m])\n\t[-h] Help\n"
 }
 
-while getopts 'f:u:p:t:s:m:vh' flag; do
+# Parse command line arguments
+while getopts 'f:u:p:t:s:m:o:vh' flag; do
 	case "${flag}" in
 		f) FROM="${OPTARG}" ;;
 		u) USER="${OPTARG}" ;;
 		p) PASS="${OPTARG}" ;;
 		t) TO="${OPTARG}" ;;
 		s) SUBJECT="${OPTARG}" ;;
-		m) MESSAGE="${OPTARG}" ;;
+		m) MESSAGE="${OPTARG}"
+		   TEXT=true ;;
+		o) MESSAGE_FILE="${OPTARG}"
+		   FILE=true ;;
 		v) verbose='true' ;;
 		h) print_usage
 		   exit 1;;
@@ -29,6 +36,16 @@ while getopts 'f:u:p:t:s:m:vh' flag; do
 	esac
 done
 
-echo "${FROM}"
+# Verify mutually exclusive options
+if [[ "${FILE}" == true && "${TEXT}" == true ]]; then
+	echo -e "Error: Cannot send both message and file.\n"
+	exit 1;
+fi
 
-sendEmail -f ${FROM} -t ${TO} -u ${SUBJECT} -m ${MESSAGE} -s smtp.googlemail.com:587 -xu ${USER} -xp ${PASS} -o tls=yes
+# Toggle between messaging text and messaging from file
+if ${FILE}; then
+	sendEmail -f ${FROM} -t ${TO} -u ${SUBJECT} -s smtp.googlemail.com:587 -xu ${USER} -xp ${PASS} -o tls=yes message-file=${MESSAGE_FILE}
+else
+	sendEmail -f ${FROM} -t ${TO} -u ${SUBJECT} -m ${MESSAGE} -s smtp.googlemail.com:587 -xu ${USER} -xp ${PASS} -o tls=yes
+fi
+
