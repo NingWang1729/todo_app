@@ -37,13 +37,13 @@ while getopts 'f:u:p:t:s:m:o:vh' flag; do
 done
 
 # Verify mutually exclusive options
-if [[ "${FILE}" == true && "${TEXT}" == true ]]; then
+if [[ "${FILE}" == "true" && "${TEXT}" == "true" ]]; then
 	echo "Error: Cannot send both message and file."
 	exit 1;
 fi
 
 # Toggle between messaging text and messaging from file
-if ${FILE}; then
+if [[ "${FILE}" == "true" ]]; then
 	sendEmail -f ${FROM} -t ${TO} -u ${SUBJECT} -s smtp.googlemail.com:587 -xu ${USER} -xp ${PASS} -o tls=yes message-file=${MESSAGE_FILE}
 else
 	sendEmail -f ${FROM} -t ${TO} -u ${SUBJECT} -m ${MESSAGE} -s smtp.googlemail.com:587 -xu ${USER} -xp ${PASS} -o tls=yes
