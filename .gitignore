@@ -1,0 +1,14 @@
+# Files to ignore:
+
+# Emacs save files
+*#
+*~
+
+# Apples
+.DS_Store
+
+# Text files
+*.txt
+
+# JS modules
+node_modules/
