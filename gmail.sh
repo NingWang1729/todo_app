@@ -38,7 +38,7 @@ done
 
 # Verify mutually exclusive options
 if [[ "${FILE}" == true && "${TEXT}" == true ]]; then
-	echo -e "Error: Cannot send both message and file.\n"
+	echo "Error: Cannot send both message and file."
 	exit 1;
 fi
 

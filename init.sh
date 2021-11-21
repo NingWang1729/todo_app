@@ -6,6 +6,7 @@ read -p "What is your gmail address? " GMAIL
 read -p "What is your gmail username? " GUSER
 read -p "What is your gmail password? " GPASS
 
+PWD=`pwd`
 # Store configuration variables
-echo -e "export GMAIL=${GMAIL} \nexport GUSER=${GUSER}\nexport GPASS=${GPASS}" >> ${PROFILE}
+echo -e "\nexport TODO_LIST_PATH=${PWD}\nexport GMAIL=${GMAIL}\nexport GUSER=${GUSER}\nexport GPASS=${GPASS}\n${PWD}/todo_loader.sh" >> ${PROFILE}
 

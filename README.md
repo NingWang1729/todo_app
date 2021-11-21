@@ -1,8 +1,22 @@
 Basic todo app:
 
-Contains gmail.sh, a basic script to send out emails.
 
-gmail.sh:
+
+---
+
+init.sh: Initializes initial configurations.
+
+---
+
+todo_loader.sh: Loads the TODO app upon startup.
+
+---
+
+todo_app.sh: TODO app that runs in the background
+
+---
+
+gmail.sh: A basic script to send out emails.
 
 Usage:
 	[-f] From: Your name or identifier
