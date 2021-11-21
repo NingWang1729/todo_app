@@ -12,3 +12,6 @@
 
 # JS modules
 node_modules/
+
+# Env variables
+.env
