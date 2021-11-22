@@ -13,7 +13,7 @@ FILE=false
 
 # Help menu
 print_usage() {
-	printf "Usage:\n\t[-f] From: Your name or identifier\n\t[-u] Username: Override default username\n\t[-p] Password: Override default password\n\t[-t] To: Recipient of email\n\t[-s] Subject: Subject line of email\n\t[-m] Attach message from text input (mutually exclusive with[-o])\n\t[-o] Attach message from file input (mutually exclusive with[-m])\n\t[-h] Help\n"
+	printf "Usage:\n\t[-f] From: Your name or identifier\n\t[-u] Username: Override default username\n\t[-p] Password: Override default password\n\t[-t] To: Recipient of email\n\t[-s] Subject: Subject line of email\n\t[-m] Attach message from text input (mutually exclusive with [-o])\n\t[-o] Attach message from file input (mutually exclusive with [-m])\n\t[-h] Help\n"
 }
 
 # Parse command line arguments
@@ -35,6 +35,7 @@ while getopts 'f:u:p:t:s:m:o:vh' flag; do
 		   exit 1 ;;
 	esac
 done
+shift "$((OPTIND-1))"
 
 # Verify mutually exclusive options
 if [[ "${FILE}" == "true" && "${TEXT}" == "true" ]]; then

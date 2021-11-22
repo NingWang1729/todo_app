@@ -18,6 +18,8 @@ gpg --list-keys  --keyid-format LONG
 gpg --delete-secret-key keyID1 keyID2 keyID3
 gpg --delete-key keyID1 keyID2 keyID3
 
+fun
+
 ---
 
 todo_list.txt: List of tasks to do.
@@ -41,6 +43,16 @@ todo_loader.sh: Loads the TODO app upon startup.
 ---
 
 todo_app.sh: TODO app that runs in the background
+
+---
+
+todo:
+
+Usage:
+	[-a TASK_NAME] Add a task to TODO list. (Mutually exclusive with [-r])
+	[-r TASK_NAME] Remove a task from TODO list. (Mutually exclusive with [-a])
+	[-t TIME] Specify deadline for a specific task.
+	[-l] List the current contents of the TODO list.
 
 ---
 
