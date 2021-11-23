@@ -1,0 +1,67 @@
+#!/bin/bash
+
+# Variable declarations:
+ADD=false
+REMOVE=false
+LIST=false
+TIME=unset
+
+# Help menu
+print_usage() {
+	printf "Usage:\n\t[-a TASK_NAME] Add a task to TODO list. (Mutually exclusive with [-r])\n\t[-r TASK_NAME] Remove a task from TODO list. (Mutually exclusive with [-a])\n\t[-t TIME] Specify deadline for a specific task.\n\t[-l] List the current contents of the TODO list.\n"
+}
+
+# Parse command line arguments
+while getopts 'a:r:t:lvh' flag; do
+	case "${flag}" in
+		a) ADD=true
+		   TASK_NAME="${OPTARG}"
+		   ;;
+		r) REMOVE=true
+		   TASK_NAME="${OPTARG}"
+		   ;;
+		t) TIME="${OPTARG}" ;;
+		l) LIST="true" ;;
+		v) verbose="true" ;;
+		h) print_usage
+		   exit 1;;
+		*) print_usage
+		   exit 1 ;;
+	esac
+done
+shift "$((OPTIND-1))"
+
+# Verify mutually exclusive options
+if [[ "${ADD}" == "true" && "${REMOVE}" == "true" ]]; then
+	echo "Error: Cannot both add and remove a task."
+	exit 1;
+fi
+
+# Verify an option was used
+if [[ "${ADD}" == "false" && "${REMOVE}" == "false" && "${LIST}" == "false" ]]; then
+	print_usage
+	exit 1;
+fi
+
+# Add task to TODO list
+if [[ "${ADD}" == "true" ]]; then
+    if [[ "${TIME}" == "unset" ]]; then
+	    echo "Error: Deadline was not set."
+		exit 1;
+	fi
+	echo "Added task ${TASK_NAME} due ${TIME} to TODO list."
+	exit 1;
+fi
+
+# Remove task from TODO list
+if [[ "${REMOVE}" == "true" ]]; then
+   	echo "Removed task ${TASK_NAME} from TODO list."
+	exit 1;
+fi
+
+# Display TODO list
+if [[ "${LIST}" == "true" ]]; then
+   	echo "Displaying TODO list... (To be implemented)."
+	exit 1;
+fi
+
