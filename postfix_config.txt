@@ -1,0 +1,27 @@
+
+# Configure Postfix for Gmail SMTP in Mac OSX Yosemite
+# Added per https://gist.github.com/joech4n/72108461bfac1bf2e99f
+# Set the relayhost to the Gmail Server.  Replace with your SMTP server as needed
+relayhost = [smtp.gmail.com]:587
+# Postfix 2.2 uses the generic(5) address mapping to replace local fantasy email
+# addresses by valid Internet addresses. This mapping happens ONLY when mail
+# leaves the machine; not when you send mail between users on the same machine.
+smtp_generic_maps = hash:/etc/postfix/generic
+
+# These settings (along with the relayhost setting above) will make
+# postfix relay all outbound non-local email via Gmail using an
+# authenticated TLS/SASL session.
+smtp_tls_loglevel=1
+smtp_tls_security_level=encrypt
+smtp_sasl_auth_enable=yes
+smtp_sasl_password_maps=hash:/etc/postfix/sasl/sasl_passwd
+smtp_sasl_security_options = noanonymous
+
+# To fix these errors per http://askubuntu.com/q/73865:
+# Dec 15 17:14:12 localhost.local postfix/smtp[3691]: Untrusted TLS connection established to smtp.gmail.com[74.125.28.108]:587: TLSv1 with cipher RC4-SHA (128/128 bits)
+smtp_tls_CApath = /usr/local/etc/openssl/certs
+smtp_tls_CAfile = /usr/local/etc/openssl/cert.pem
+
+# To fix these errors per http://stackoverflow.com/q/26447316:
+# Dec 15 17:46:51 heimerdinger.local postfix/smtp[4758]: C9682156786: to=<username@gmail.com>, relay=smtp.gmail.com[74.125.28.108]:587, delay=1.3, delays=0.77/0.11/0.42/0, dsn=4.7.0, status=deferred (SASL authentication failed; cannot authenticate to server smtp.gmail.com[74.125.28.108]: generic failure)
+smtp_sasl_mechanism_filter = plain
