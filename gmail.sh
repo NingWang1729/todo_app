@@ -1,10 +1,8 @@
 #!/bin/bash
 
 # Variable declarations:
-FROM=${GMAIL}
 USER=${GUSER}
-PASS=${GPASS}
-TO=${GMAIL}
+TO=${GUSER}@gmail.com
 SUBJECT='Subject'
 MESSAGE='Message'
 MESSAGE_FILE=''
@@ -17,9 +15,8 @@ print_usage() {
 }
 
 # Parse command line arguments
-while getopts 'f:u:p:t:s:m:o:vh' flag; do
+while getopts 'u:p:t:s:m:o:vh' flag; do
 	case "${flag}" in
-		f) FROM="${OPTARG}" ;;
 		u) USER="${OPTARG}" ;;
 		p) PASS="${OPTARG}" ;;
 		t) TO="${OPTARG}" ;;
@@ -43,10 +40,25 @@ if [[ "${FILE}" == "true" && "${TEXT}" == "true" ]]; then
 	exit 1;
 fi
 
-# Toggle between messaging text and messaging from file
-if [[ "${FILE}" == "true" ]]; then
-	sendEmail -f ${FROM} -t ${TO} -u ${SUBJECT} -s smtp.googlemail.com:587 -xu ${USER} -xp ${PASS} -o tls=yes message-file=${MESSAGE_FILE}
+# Toggle email to send email from
+if [[ "${USER}" == "${GUSER}" ]]; then
+	# Send email from default email
+	# Toggle between messaging text and messaging from file
+	if [[ "${FILE}" == "true" ]]; then
+		# Send email from file
+		mail -s "${SUBJECT}" "${TO}" < "${MESSAGE_FILE}"	
+	else
+		# Send email from message
+		echo "${MESSAGE}" | mail -s "${SUBJECT}" "${TO}"	
+	fi	
 else
-	sendEmail -f ${FROM} -t ${TO} -u ${SUBJECT} -m ${MESSAGE} -s smtp.googlemail.com:587 -xu ${USER} -xp ${PASS} -o tls=yes
+	# Send email from other email
+	# Toggle between messaging text and messaging from file
+	if [[ "${FILE}" == "true" ]]; then
+		# Send email from file
+		sendEmail -f ${USER}@gmail.com -t ${TO} -u ${SUBJECT} -s smtp.googlemail.com:587 -xu ${USER} -xp ${PASS} -o tls=yes message-file=${MESSAGE_FILE}
+	else
+		# Send email from message
+		sendEmail -f ${USER}@gmail.com -t ${TO} -u ${SUBJECT} -m ${MESSAGE} -s smtp.googlemail.com:587 -xu ${USER} -xp ${PASS} -o tls=yes
+	fi
 fi
-
