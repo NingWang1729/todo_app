@@ -3,7 +3,7 @@
 make: init
 
 init:
-	./init.sh
+	sudo ./init.sh
 
 clean:
 	rm -rf *~ *#
